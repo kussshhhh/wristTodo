@@ -3,7 +3,7 @@ package com.example.weartodo.presentation
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "todos")
 data class Todo(
     @PrimaryKey
     val id: String,

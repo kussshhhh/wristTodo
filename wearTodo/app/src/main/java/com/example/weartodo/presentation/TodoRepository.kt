@@ -1,14 +1,12 @@
 package com.example.weartodo.presentation
+import androidx.lifecycle.LiveData
 import com.example.weartodo.presentation.Todo
 
-class TodoRepository(private val todoDao: TodoDao) {
-    val allTodos: List<Todo> = todoDao.getAllTodos()
+class TodoRepository(private val todoDao : TodoDao){
+    val getAllTodos: LiveData<List<Todo >> = todoDao.getAllTodos()
 
-    fun insert(todo: Todo) {
+    suspend fun insertTodo(todo : Todo){
         todoDao.insertTodo(todo)
-    }
 
-    fun getTodoById(id: String): Todo? {
-        return todoDao.getTodoById(id)
     }
 }

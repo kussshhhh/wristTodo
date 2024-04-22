@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+
 android {
     namespace = "com.example.weartodo"
     compileSdk = 34
