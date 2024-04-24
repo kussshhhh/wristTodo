@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TodoViewModel(application: Application): AndroidViewModel(application){
-    private val getAllTodos: LiveData<List<Todo>>
+    val getAllTodos: LiveData<List<Todo>>
     private val repository: TodoRepository
 
     init {

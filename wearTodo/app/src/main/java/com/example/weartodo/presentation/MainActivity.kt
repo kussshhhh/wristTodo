@@ -6,65 +6,60 @@
 
 package com.example.weartodo.presentation
 
-//import TodoListScreen
-//import `TodoRepository.kt`
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.wear.compose.material.MaterialTheme
+//import androidx.compose.material.Surface
+//import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.json.JSONObject
-
+//import androidx.compose.ui.platform.setContent
+import com.example.weartodo.presentation.Todo
+import com.example.weartodo.presentation.TodoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val todoDao = TodoDatabase.getInstance(this@MainActivity).todoDao()
 
-        val todo1 = Todo(id = "1", json = "{\"title\":\"Buy milk\",\"description\":\"Buy milk from the store\"}")
-        val todo2 = Todo(id = "2", json = "{\"title\":\"Buy eggs\",\"description\":\"Buy eggs from the store\"}")
+        // Prepopulate the database with 2 todos
+        val todo1 = Todo("1", "{\"title\":\"Buy milk\",\"description\":\"Buy milk from the store\"}")
+        val todo2 = Todo("2", "{\"title\":\"Buy eggs\",\"description\":\"Buy eggs from the store\"}")
 
-        todoDao.insertTodo(todo1)
-        todoDao.insertTodo(todo2)
+        val viewModel = TodoViewModel(application)
+        viewModel.insertTodo(todo1)
+        viewModel.insertTodo(todo2)
+
+        // Display the todos using Compose UI
         setContent {
-            val sheesh = TodoDatabase.getInstance(this@MainActivity).todoDao()
-            val todoRepository = TodoRepository(sheesh)
-            val todos = todoRepository.allTodos
-
-            TodoList(todos = todos)
-        }
-    }
-}
-
-@Composable
-fun TodoList(todos: List<Todo>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        todos.forEach { todo ->
-            TodoItem(todo = todo)
+            Surface(color = MaterialTheme.colors.background) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    viewModel.getAllTodos.value?.forEach { todo ->
+                        TodoItem(todo)
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
 fun TodoItem(todo: Todo) {
-    val jsonObject = JSONObject(todo.json)
-    val title = jsonObject.getString("title")
-    val description = jsonObject.getString("description")
-
     Text(
-        text = "$title: $description",
-        style = MaterialTheme.typography.bodyLarge
+        text = todo.json,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(vertical = 4.dp)
     )
 }
